@@ -1,24 +1,36 @@
 const mongoose = require("mongoose");
 const BookModel = require("../models/books");
+const Pagination = require("../models/pagination");
+const Error = require("../models/error");
+
 
 /**
  * Retrieve all Books from the database.
+ * @param {*} req 
  * @param {*} res 
  */
-function findAll(_, res) {
+async function findAll(req, res) {
     // Apply filter and pagination here
     var condition = {};
 
-    BookModel.find(condition)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving books."
-            });
-        });
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const limit = parseInt(req.query.limit) || 10; // Number of results per page
+
+    try {
+        const count = await BookModel.countDocuments();
+        const totalPages = Math.ceil(count / limit);
+
+        const books = await
+            BookModel.find(condition)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .exec();
+
+        res.json(new Pagination(books, page, totalPages));
+    } catch (error) {
+        res.status(500)
+            .json(new Error(error.message || "Some error occurred while retrieving books."));
+    }
 };
 
 /**
@@ -32,14 +44,13 @@ function findOne(req, res) {
     BookModel.findById(id)
         .then(data => {
             if (!data)
-                res.status(404).send({ message: "Not found Book with id " + id });
+                res.status(404)
+                    .send(new Error("Not found Book with id " + id));
             else res.send(data);
         })
         .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving books."
-            });
+            res.status(500)
+                .send(new Error(err.message || "Some error occurred while retrieving books."));
         });
 };
 
@@ -51,7 +62,8 @@ function findOne(req, res) {
 function create(req, res) {
     // Validate request
     if (!req.body.title) {
-        res.status(400).send({ message: "Content can not be empty!" });
+        res.status(400)
+            .send(new Error("Content can not be empty!"));
         return;
     }
 
@@ -72,10 +84,8 @@ function create(req, res) {
             res.send(data);
         })
         .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the Book."
-            });
+            res.status(500)
+                .send(new Error(err.message || "Some error occurred while creating the Book."));
         });
 };
 
@@ -86,9 +96,8 @@ function create(req, res) {
  */
 function updateByBookId(req, res) {
     if (!req.body) {
-        return res.status(400).send({
-            message: "Data to update can not be empty!"
-        });
+        return res.status(400)
+            .send(new Error("Data to update can not be empty!"));
     }
 
     const id = req.params.bookId;
@@ -96,11 +105,13 @@ function updateByBookId(req, res) {
     BookModel.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
         .then(data => {
             if (!data) {
-                res.status(404).send({ message: "Could not delete Book with id " + id });
+                res.status(404)
+                    .send(new Error("Could not delete Book with id " + id));
             } else res.send({ message: "Book was updated successfully." });
         })
         .catch(err => {
-            res.status(500).send({ message: "Error updating Book with id " + id });
+            res.status(500)
+                .send(new Error("Error updating Book with id " + id));
         });
 };
 
@@ -123,7 +134,8 @@ function deleteByBookId(req, res) {
             }
         })
         .catch(err => {
-            res.status(500).send({ message: "Could not delete Book with id " + id });
+            res.status(500)
+                .send(new Error("Could not delete Book with id " + id));
         });
 };
 
