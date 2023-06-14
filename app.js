@@ -6,9 +6,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const { connectToDatabase, disconnectFromDatabase } = require('./config/db');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-
 const app = express();
 dotenv.config();
 
@@ -17,7 +14,12 @@ connectToDatabase();
 
 // Start the server
 const port = process.env.PORT;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, (error) => {
+  if (!error)
+    console.log("Server is successfully running on port " + port)
+  else
+    console.log("Error occurred, server can't start", error);
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,8 +32,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// API Routes
+const bookRouter = require('./routes/books');
+// const usersRouter = require('./routes/users');
+app.use('/api/books', bookRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
