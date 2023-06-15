@@ -10,11 +10,12 @@ const Error = require("../models/error");
  * @param {*} res 
  */
 async function findAll(req, res) {
+    const queries = req.query;
     // Apply filter and pagination here
     var condition = {};
 
-    const page = parseInt(req.query.page) || 1; // Current page number
-    const limit = parseInt(req.query.limit) || 10; // Number of results per page
+    const page = parseInt(queries.page) || 1; // Current page number
+    const limit = parseInt(queries.limit) || 10; // Number of results per page
 
     try {
         const count = await BookModel.countDocuments();
@@ -81,7 +82,7 @@ function create(req, res) {
     book
         .save(book)
         .then(data => {
-            res.send(data);
+            res.status(201).send(data);
         })
         .catch(err => {
             res.status(500)
@@ -128,9 +129,7 @@ function deleteByBookId(req, res) {
             if (!data) {
                 res.status(404).send({ message: "Not found Book with id " + id });
             } else {
-                res.send({
-                    message: "Book was deleted successfully!"
-                });
+                res.status(204).send();
             }
         })
         .catch(err => {
