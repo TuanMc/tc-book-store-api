@@ -7,6 +7,7 @@ const BookSchema = new Schema({
     quantity: { type: Number },
     price: { type: Number },
     description: { type: String },
+    category: { type: String },
 });
 
 BookSchema.method("toJSON", function () {

@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -35,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // API Routes
 const bookRouter = require('./routes/books');
 // const usersRouter = require('./routes/users');
-app.use('/api/books', bookRouter);
+app.use('/api/books', cors(), bookRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
