@@ -2,6 +2,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../app.js');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -36,18 +38,16 @@ describe('Test Books APIs', () => {
     });
 
     it('should create a book', (done) => {
-        const testBook = {
-            title: "test",
-            imageUrl: "http://dummyimage.com/210x100.png/cc0000/ffffff",
-            quantity: 12,
-            price: 44.02,
-            description: "felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui"
-        };
-
         chai
             .request(app)
             .post('/api/books')
-            .send(testBook)
+            .set('content-type', 'multipart/form-data')
+            .field('title', 'test')
+            .field('description', 'slim')
+            .field('category', 'drama')
+            .field('price', '10')
+            .field('quantity', '01')
+            .attach('image', fs.readFileSync(`${__dirname}/mock/image.png`), 'tests/image.png')
             .end((err, res) => {
                 if (err) throw err;
                 createdBookId = res.body.id;

@@ -18,8 +18,7 @@ async function findAll(req, res) {
     const limit = parseInt(queries.limit) || 10; // Number of results per page
 
     try {
-        const count = await BookModel.countDocuments();
-        const totalPages = Math.ceil(count / limit);
+        const totalItems = await BookModel.countDocuments();
 
         const books = await
             BookModel.find(condition)
@@ -27,7 +26,7 @@ async function findAll(req, res) {
                 .limit(limit)
                 .exec();
 
-        res.json(new Pagination(books, page, totalPages));
+        res.json(new Pagination(books, page, totalItems));
     } catch (error) {
         res.status(500)
             .json(new Error(error.message || "Some error occurred while retrieving books."));
@@ -68,6 +67,14 @@ function create(req, res) {
         return;
     }
 
+    // Handle the uploaded file
+    if (req.file) {
+        console.log('File uploaded successfully:', req.file);
+    } else {
+        res.status(404)
+            .send(new Error("Image could not be empty!"));
+    }
+
     // Create a Book
     const book = new BookModel({
         _id: new mongoose.Types.ObjectId(),
@@ -75,7 +82,7 @@ function create(req, res) {
         quantity: req.body.quantity,
         price: req.body.price,
         description: req.body.description,
-        imageUrl: "test"
+        imageUrl: 'http://localhost:3000/uploads/' + req.file.filename
     });
 
     // Save Book in the database

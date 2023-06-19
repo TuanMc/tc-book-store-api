@@ -1,8 +1,8 @@
 class Pagination {
-    constructor(data, page, totalPage) {
+    constructor(data, page, totalItems) {
         this.data = data;
         this.page = page;
-        this.totalPage = totalPage;
+        this.totalItems = totalItems;
     }
 }
 
