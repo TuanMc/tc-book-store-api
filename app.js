@@ -1,30 +1,15 @@
-const createError = require('http-errors');
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const routes = require('./routes');
 const { connectToDatabase, disconnectFromDatabase } = require('./config/db');
+const { swaggerDoc, errorHandlers } = require('./utils');
 
 const app = express();
 dotenv.config();
-
-// Connect to the database
-connectToDatabase();
-
-// Start the server
-const port = process.env.PORT;
-app.listen(port, (error) => {
-  if (!error)
-    console.log("Server is successfully running on port " + port)
-  else
-    console.log("Error occurred, server can't start", error);
-});
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
 // Middleware
 app.use(logger('dev'));
@@ -32,26 +17,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 // API Routes
-const bookRouter = require('./routes/books');
-// const usersRouter = require('./routes/users');
-app.use('/api/books', cors(), bookRouter);
+routes(app);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+// Set up Swagger UI
+swaggerDoc(app);
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// Handle generic error
+errorHandlers(app);
 
-  console.log(err.message);
-  res.status(err.status || 500);
-  res.send('Internal Server Error');
+// Start the server
+const port = process.env.PORT;
+app.listen(port, async (error) => {
+  if (error) console.error("Error occurred, server can't start", error);
+  else {
+    console.info("Server is successfully running on port " + port);
+    // Connect to the database
+    await connectToDatabase();
+  }
 });
 
 // Gracefully disconnect from the database when the application is terminated
@@ -59,5 +44,7 @@ process.on('SIGINT', async () => {
   await disconnectFromDatabase();
   process.exit(0);
 });
+
+
 
 module.exports = app;

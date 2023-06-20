@@ -3,7 +3,6 @@ const BookModel = require("../models/books");
 const Pagination = require("../models/pagination");
 const Error = require("../models/error");
 
-
 /**
  * Retrieve all Books from the database.
  * @param {*} req 
@@ -60,13 +59,6 @@ function findOne(req, res) {
  * @param {*} res 
  */
 function create(req, res) {
-    // Validate request
-    if (!req.body.title) {
-        res.status(400)
-            .send(new Error("Content can not be empty!"));
-        return;
-    }
-
     // Handle the uploaded file
     if (req.file) {
         console.log('File uploaded successfully:', req.file);

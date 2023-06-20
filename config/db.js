@@ -7,7 +7,7 @@ async function connectToDatabase() {
             useUnifiedTopology: true,
         });
 
-        console.log('Connected to the database');
+        console.info('Connected to the database');
     } catch (error) {
         console.error('Error connecting to the database:', error);
         // Handle the error appropriately (e.g., exit the application, retry connection, etc.)
