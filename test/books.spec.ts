@@ -1,9 +1,9 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../app.js');
-const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import app from '../src/app.js';
+import mongoose, { ConnectOptions } from 'mongoose';
+import fs from 'fs';
+import path from 'path';
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -13,7 +13,7 @@ describe('Test Books APIs', () => {
 
     before((done) => {
         // Connect to the MongoDB test database
-        mongoose.connect('mongodb://127.0.0.1:27017/book_store_db', { useNewUrlParser: true, useUnifiedTopology: true })
+        mongoose.connect('mongodb://127.0.0.1:27017/book_store_db', { useNewUrlParser: true, useUnifiedTopology: true } as ConnectOptions)
             .then(() => done())
             .catch((err) => done(err));
     });
