@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../src/app.js';
+import app from '../src/app';
 import mongoose, { ConnectOptions } from 'mongoose';
 import fs from 'fs';
 import path from 'path';
@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 
 describe('Test Books APIs', () => {
-    let createdBookId;
+    let createdBookId: string;
 
     before((done) => {
         // Connect to the MongoDB test database
