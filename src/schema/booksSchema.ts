@@ -1,4 +1,4 @@
-const { object, string, number, date } = require('yup');
+import { object, string, number, date } from 'yup';
 
 const getBookByIdSchema = object().shape({
     bookId: string().required(),
@@ -72,4 +72,4 @@ const createBookSchema = object({
     price: number().required().positive().integer(),
 });
 
-module.exports = { getBookByIdSchema, createBookSchema }
+export { getBookByIdSchema, createBookSchema };

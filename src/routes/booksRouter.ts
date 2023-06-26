@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
+import bookControllers from '../controllers/booksController';
+import validate from '../middleware/validate';
+import { upload } from '../config/multer';
+import { getBookByIdSchema, createBookSchema } from '../schema/booksSchema';
+
 const router = express.Router();
-const bookControllers = require('../controllers/booksController');
-const validate = require('../middleware/validate');
-const { upload } = require('../config/multer');
-const { getBookByIdSchema, createBookSchema } = require('../schema/booksSchema');
 
 /**
  * @swagger
@@ -112,4 +113,4 @@ router.put('/:bookId', bookControllers.updateByBookId);
  */
 router.delete('/:bookId', bookControllers.deleteByBookId);
 
-module.exports = router;
+export default router;

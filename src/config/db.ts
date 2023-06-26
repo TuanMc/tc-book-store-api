@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose, { ConnectOptions } from 'mongoose';
 
-async function connectToDatabase() {
+async function connectToDatabase(): Promise<void> {
     try {
-        await mongoose.connect(process.env.DB_CONNECTION_STRING, {
+        await mongoose.connect((process.env.DB_CONNECTION_STRING as string), {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-        });
+        } as ConnectOptions);
 
         console.info('Connected to the database');
     } catch (error) {
@@ -14,7 +14,7 @@ async function connectToDatabase() {
     }
 }
 
-async function disconnectFromDatabase() {
+async function disconnectFromDatabase(): Promise<void> {
     try {
         await mongoose.disconnect();
         console.log('Disconnected from the database');
@@ -23,4 +23,4 @@ async function disconnectFromDatabase() {
     }
 }
 
-module.exports = { mongoose, connectToDatabase, disconnectFromDatabase };
+export { mongoose, connectToDatabase, disconnectFromDatabase };

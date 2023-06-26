@@ -1,7 +1,7 @@
-const createError = require('http-errors');
+import createError from 'http-errors';
 
-const validate = (schema) =>
-    async (req, res, next) => {
+const validate = (schema: any) =>
+    async (req: any, res: any, next: any) => {
         try {
             const reqProps = {
                 ...req.params,
@@ -11,9 +11,9 @@ const validate = (schema) =>
 
             await schema.validate(reqProps);
             next();
-        } catch (e) {
+        } catch (e: any) {
             return next(createError(400, e.errors));
         }
     };
 
-module.exports = validate;
+export default validate;

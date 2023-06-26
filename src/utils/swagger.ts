@@ -1,5 +1,5 @@
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 
 const swaggerOptions = {
     definition: {
@@ -15,12 +15,12 @@ const swaggerOptions = {
 
 const specs = swaggerJsdoc(swaggerOptions);
 
-function swaggerDoc(app) {
+function swaggerDoc(app: any) {
     // Swagger page
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
     // Docs in JSON format
-    app.get("/docs.json", (req, res) => {
+    app.get("/docs.json", (req: any, res: any) => {
         res.setHeader("Content-Type", "application/json");
         res.send(specs);
     });
@@ -28,4 +28,4 @@ function swaggerDoc(app) {
     console.info(`Docs available at http://localhost:${process.env.PORT}/api-docs`);
 }
 
-module.exports = swaggerDoc;
+export default swaggerDoc;

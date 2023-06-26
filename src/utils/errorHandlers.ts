@@ -1,11 +1,13 @@
-function errorHandlers(app) {
+import createHttpError from "http-errors";
+
+function errorHandlers(app: any) {
     // catch 404 and forward to error handler
-    app.use(function (req, res, next) {
-        next(createError(404));
+    app.use(function (req: any, res: any, next: any) {
+        next(createHttpError(404));
     });
 
     // error handler
-    app.use(function (err, req, res, next) {
+    app.use(function (err: any, req: any, res: any, next: any) {
         // set locals, only providing error in development
         res.locals.message = err.message;
         res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -17,4 +19,4 @@ function errorHandlers(app) {
 
 }
 
-module.exports = errorHandlers;
+export default errorHandlers;
