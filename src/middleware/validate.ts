@@ -1,7 +1,8 @@
+import { Request, Response } from 'express';
 import createError from 'http-errors';
 
 const validate = (schema: any) =>
-    async (req: any, res: any, next: any) => {
+    async (req: Request, res: Response, next: any) => {
         try {
             const reqProps = {
                 ...req.params,

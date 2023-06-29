@@ -3,6 +3,7 @@ import bookControllers from '../controllers/booksController';
 import validate from '../middleware/validate';
 import { upload } from '../config/multer';
 import { getBookByIdSchema, createBookSchema } from '../schema/booksSchema';
+import tokenValidate from '../middleware/token-validate';
 
 const router = express.Router();
 
@@ -39,7 +40,7 @@ router.get('/', bookControllers.findAll);
  *                  schema:
  *                       $ref: '#/components/schemas/BookDetailsResponse'
  */
-router.get('/:bookId', validate(getBookByIdSchema), bookControllers.findOne);
+router.get('/:bookId', tokenValidate(), validate(getBookByIdSchema), bookControllers.findOne);
 
 /**
  * @swagger
@@ -60,7 +61,7 @@ router.get('/:bookId', validate(getBookByIdSchema), bookControllers.findOne);
  *                  schema:
  *                       $ref: '#/components/schemas/BookDetailsResponse'
  */
-router.post('/', upload.single('image'), validate(createBookSchema), bookControllers.create);
+router.post('/', upload.single('image'), tokenValidate(), validate(createBookSchema), bookControllers.create);
 
 /**
  * @swagger
@@ -92,7 +93,7 @@ router.post('/', upload.single('image'), validate(createBookSchema), bookControl
  *                              type: string
  *                              default: Book was updated successfully.  
  */
-router.put('/:bookId', bookControllers.updateByBookId);
+router.put('/:bookId', tokenValidate(), bookControllers.updateByBookId);
 
 /**
  * @swagger
@@ -111,6 +112,6 @@ router.put('/:bookId', bookControllers.updateByBookId);
  *       204:
  *         description: Delete book success
  */
-router.delete('/:bookId', bookControllers.deleteByBookId);
+router.delete('/:bookId', tokenValidate(), bookControllers.deleteByBookId);
 
 export default router;
