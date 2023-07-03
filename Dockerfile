@@ -4,18 +4,18 @@ FROM node:18-alpine AS build
 WORKDIR /usr/src/app/api
 
 # Set environment variables
-ENV DB_CONNECTION_STRING = mongodb://127.0.0.1:27017/book_store_db
-ENV PORT = 3000
-ENV KEYCLOAK_DOMAIN = http://localhost:8080
-ENV KEYCLOAK_REALM = book-store
-ENV KEYCLOAK_CLIENT_ID = book-store-web
+ENV DB_CONNECTION_STRING=mongodb://mongo-example/book_store_db
+ENV PORT=3000
+ENV KEYCLOAK_DOMAIN=http://localhost:8080
+ENV KEYCLOAK_REALM=book-store
+ENV KEYCLOAK_CLIENT_ID=book-store-web
 
 # Copy files to virtual directory
 # COPY package.json package-lock.json ./
 COPY package.json package-lock.json ./
 COPY . .
 
-RUN npm ci --omit=dev
+RUN npm ci
 RUN npm run build
 
 ### STAGE 2:RUN ###
