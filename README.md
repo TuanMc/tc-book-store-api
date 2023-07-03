@@ -30,26 +30,44 @@ This is a practice project for NodeJS with MongoDB.
 
 ## Usage
 
+### Running on local:
 1. Start the development server:
    ```shell
+   npm run dev
+   ```
+
+   or:
+   ```shell
+   npm run build
    npm start
    ```
 
 2.  Open your browser and navigate to http://localhost:3000 to access the application.
 
+### Running on Docker:
+1. Setup a network to connect to MongoDB:
+   ```shell
+   docker network tc-book-store-network
+   ```
+
+   **Note:** Skip this step after the first run 
+
+2. Start MongoDB with the container name `mongo-example` and connect to `tc-book-store-network` network:
+   ```shell
+   docker run --network tc-book-store-network -p 27017:27017 -–name=mongo-example mongo:latest
+   ```
+
+3. Build the Book store's BE service with tag `tc-book-store-api`:
+   ```shell
+   docker build -t tc-book-store-api .
+   ```
+
+4. Start the Book store's BE service and also connect to `tc-book-store-network` network:
+   ```shell
+   docker run --network tc-book-store-network -p 3000:3000 tc-book-store-api
+   ```
+
 ## Routes
-
-### Authentication
--   POST /api/auth/login
--   POST /api/auth/logout
--   POST /api/auth/register
-
-### Users
--   GET /api/users: Retrieves a list of users.
--   GET /api/users/:id: Retrieves a specific user by ID.
--   POST /api/users: Creates a new user.
--   PUT /api/users/:id: Updates a user by ID.
--   DELETE /api/users/:id: Deletes a user by ID.
 
 ### Books
 -   GET /api/books: Retrieves a list of books.
@@ -61,6 +79,6 @@ This is a practice project for NodeJS with MongoDB.
 ### Book Category
 -   GET /api/books/categories: Retrieves a list of books' categories.
 
-### Cart
--   GET /api/carts/:userId: Retrieves unpaid books in cart.
--   TBD
+### Cart [TBD]
+<!-- -   GET /api/carts/:userId: Retrieves unpaid books in cart.
+-   TBD -->
