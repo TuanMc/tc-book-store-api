@@ -4,9 +4,12 @@
         "module": "commonjs",
         "outDir": "./dist",
         "rootDir": "./src",
+        "types": ["reflect-metadata"],
         "strict": true,
         "esModuleInterop": true,
-        "skipLibCheck": false
+        "skipLibCheck": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     },
     "include": [
         "src/**/*.ts"

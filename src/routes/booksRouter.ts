@@ -1,11 +1,15 @@
 import express from 'express';
-import bookControllers from '../controllers/booksController';
+import BooksController from '../controllers/booksController';
 import validate from '../middleware/validate';
 import { upload } from '../config/multer';
 import { getBookByIdSchema, createBookSchema } from '../schema/booksSchema';
 import tokenValidate from '../middleware/token-validate';
+import container from '../services/container';
 
 const router = express.Router();
+
+// Resolve the BooksController from the container
+const booksController = container.resolve<BooksController>(BooksController);
 
 /**
  * @swagger
@@ -17,7 +21,7 @@ const router = express.Router();
  *       200:
  *         description: A list of books
  */
-router.get('/', bookControllers.findAll);
+router.get('/', booksController.findAll.bind(booksController));
 
 /**
  * @swagger
@@ -40,7 +44,7 @@ router.get('/', bookControllers.findAll);
  *                  schema:
  *                       $ref: '#/components/schemas/BookDetailsResponse'
  */
-router.get('/:bookId', tokenValidate(), validate(getBookByIdSchema), bookControllers.findOne);
+router.get('/:bookId', validate(getBookByIdSchema), booksController.findOne.bind(booksController));
 
 /**
  * @swagger
@@ -61,7 +65,7 @@ router.get('/:bookId', tokenValidate(), validate(getBookByIdSchema), bookControl
  *                  schema:
  *                       $ref: '#/components/schemas/BookDetailsResponse'
  */
-router.post('/', upload.single('image'), tokenValidate(), validate(createBookSchema), bookControllers.create);
+router.post('/', upload.single('image'), tokenValidate(), validate(createBookSchema), booksController.create.bind(booksController));
 
 /**
  * @swagger
@@ -93,7 +97,7 @@ router.post('/', upload.single('image'), tokenValidate(), validate(createBookSch
  *                              type: string
  *                              default: Book was updated successfully.  
  */
-router.put('/:bookId', tokenValidate(), bookControllers.updateByBookId);
+router.put('/:bookId', tokenValidate(), booksController.updateByBookId.bind(booksController));
 
 /**
  * @swagger
@@ -112,6 +116,6 @@ router.put('/:bookId', tokenValidate(), bookControllers.updateByBookId);
  *       204:
  *         description: Delete book success
  */
-router.delete('/:bookId', tokenValidate(), bookControllers.deleteByBookId);
+router.delete('/:bookId', tokenValidate(), booksController.deleteByBookId.bind(booksController));
 
 export default router;
