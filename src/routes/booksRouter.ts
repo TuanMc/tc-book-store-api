@@ -44,7 +44,7 @@ router.get('/', booksController.findAll.bind(booksController));
  *                  schema:
  *                       $ref: '#/components/schemas/BookDetailsResponse'
  */
-router.get('/:bookId', validate(getBookByIdSchema), booksController.findOne.bind(booksController));
+router.get('/:bookId', tokenValidate(), validate(getBookByIdSchema), booksController.findOne.bind(booksController));
 
 /**
  * @swagger
