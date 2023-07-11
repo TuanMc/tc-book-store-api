@@ -5,8 +5,8 @@ WORKDIR /usr/src/app/api
 # Copy files to virtual directory
 # COPY package.json package-lock.json ./
 COPY package.json package-lock.json ./
-COPY . .
 RUN npm ci
+COPY . .
 RUN npm run build
 
 ### STAGE 2:RUN ###
@@ -18,7 +18,7 @@ WORKDIR /app
 # Set environment variables
 ENV DB_CONNECTION_STRING=mongodb://mongo-example/book_store_db
 ENV PORT=3000
-ENV KEYCLOAK_DOMAIN=http://localhost:8080
+ENV KEYCLOAK_DOMAIN=http://keycloak
 ENV KEYCLOAK_REALM=book-store
 ENV KEYCLOAK_CLIENT_ID=book-store-web
 
